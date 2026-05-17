@@ -7,6 +7,7 @@ public class DigitalId {
     private final String lastName;
     private final String dateOfBirth;
     private final String address;
+    private IdentityStatus status;
 
     public DigitalId(String id, String firstName, String lastName, String dateOfBirth, String address) {
         this.id = id;
@@ -14,6 +15,7 @@ public class DigitalId {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+        this.status = IdentityStatus.ACTIVE;
     }
 
     public String getId() {
@@ -34,5 +36,13 @@ public class DigitalId {
 
     public String getAddress() {
         return address;
+    }
+
+    public IdentityStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(IdentityStatus status) {
+        this.status = status;
     }
 }

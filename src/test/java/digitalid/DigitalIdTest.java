@@ -16,4 +16,19 @@ public class DigitalIdTest {
         assertEquals("123 Main Street", id.getAddress());
     }
 
+    @Test
+    void testNewDigitalIdIsActive() {
+        DigitalId id = new DigitalId("ID-001", "John", "Smith", "1990-05-15", "123 Main Street");
+
+        assertEquals(IdentityStatus.ACTIVE, id.getStatus());
+    }
+
+    @Test
+    void testChangeStatus() {
+        DigitalId id = new DigitalId("ID-001", "John", "Smith", "1990-05-15", "123 Main Street");
+
+        id.setStatus(IdentityStatus.SUSPENDED);
+        assertEquals(IdentityStatus.SUSPENDED, id.getStatus());
+    }
+
 }
