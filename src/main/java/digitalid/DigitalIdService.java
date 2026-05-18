@@ -23,6 +23,24 @@ public class DigitalIdService {
         return storage.findById(id);
     }
 
+    public boolean updateAddress(String id, String newAddress) {
+        DigitalId digitalId = storage.findById(id);
+        if (digitalId == null) {
+            return false;
+        }
+
+        if (digitalId.getStatus() == IdentityStatus.REVOKED) {
+            return false;
+        }
+
+        if (newAddress == null || newAddress.isEmpty()) {
+            return false;
+        }
+
+        digitalId.setAddress(newAddress);
+        return true;
+    }
+
     public boolean changeStatus(String id, IdentityStatus newStatus) {
         DigitalId digitalId = storage.findById(id);
         if (digitalId == null) {

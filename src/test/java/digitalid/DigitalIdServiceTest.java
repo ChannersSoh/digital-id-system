@@ -82,4 +82,30 @@ public class DigitalIdServiceTest {
         boolean result = service.changeStatus("ID-999", IdentityStatus.SUSPENDED);
         assertFalse(result);
     }
+
+    @Test
+    void testUpdateAddress() {
+        service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+
+        boolean result = service.updateAddress("ID-100", "25 Garden Lodge");
+        assertTrue(result);
+        assertEquals("25 Garden Lodge", service.getDigitalId("ID-100").getAddress());
+    }
+
+    @Test
+    void testCannotUpdateAddressOfRevokedId() {
+        service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+        service.changeStatus("ID-100", IdentityStatus.REVOKED);
+
+        boolean result = service.updateAddress("ID-100", "25 Garden Lodge");
+        assertFalse(result);
+    }
+
+    @Test
+    void testCannotUpdateAddressWithEmptyValue() {
+        service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+
+        boolean result = service.updateAddress("ID-100", "");
+        assertFalse(result);
+    }
 }

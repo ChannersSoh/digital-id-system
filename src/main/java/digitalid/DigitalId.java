@@ -6,7 +6,7 @@ public class DigitalId {
     private final String firstName;
     private final String lastName;
     private final String dateOfBirth;
-    private final String address;
+    private String address;
     private IdentityStatus status;
 
     public DigitalId(String id, String firstName, String lastName, String dateOfBirth, String address) {
@@ -36,6 +36,10 @@ public class DigitalId {
 
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public IdentityStatus getStatus() {
