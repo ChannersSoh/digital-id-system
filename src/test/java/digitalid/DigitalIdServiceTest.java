@@ -18,10 +18,11 @@ public class DigitalIdServiceTest {
     }
 
     @Test
-    void testCreateWithInvalidDataReturnsNull() {
-        DigitalId result = service.createDigitalId("", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
-
-        assertNull(result);
+    void testCreateWithInvalidDataThrowsException() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.createDigitalId("", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+        });
+        assertEquals("All fields must be provided", exception.getMessage());
     }
 
     @Test
@@ -43,17 +44,18 @@ public class DigitalIdServiceTest {
     @Test
     void testCannotCreateDuplicateId() {
         service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
-        DigitalId duplicate = service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
 
-        assertNull(duplicate);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+        });
+        assertEquals("ID already exists", exception.getMessage());
     }
 
     @Test
     void testRevokeActiveId() {
         service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
 
-        boolean result = service.changeStatus("ID-100", IdentityStatus.REVOKED);
-        assertTrue(result);
+        service.changeStatus("ID-100", IdentityStatus.REVOKED);
         assertEquals(IdentityStatus.REVOKED, service.getDigitalId("ID-100").getStatus());
     }
 
@@ -62,8 +64,7 @@ public class DigitalIdServiceTest {
         service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
         service.changeStatus("ID-100", IdentityStatus.SUSPENDED);
 
-        boolean result = service.changeStatus("ID-100", IdentityStatus.ACTIVE);
-        assertTrue(result);
+        service.changeStatus("ID-100", IdentityStatus.ACTIVE);
         assertEquals(IdentityStatus.ACTIVE, service.getDigitalId("ID-100").getStatus());
     }
 
@@ -72,23 +73,25 @@ public class DigitalIdServiceTest {
         service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
         service.changeStatus("ID-100", IdentityStatus.REVOKED);
 
-        boolean result = service.changeStatus("ID-100", IdentityStatus.ACTIVE);
-        assertFalse(result);
-        assertEquals(IdentityStatus.REVOKED, service.getDigitalId("ID-100").getStatus());
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            service.changeStatus("ID-100", IdentityStatus.ACTIVE);
+        });
+        assertEquals("Cannot change status of a revoked ID", exception.getMessage());
     }
 
     @Test
     void testCannotChangeStatusOfNonExistentId() {
-        boolean result = service.changeStatus("ID-999", IdentityStatus.SUSPENDED);
-        assertFalse(result);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.changeStatus("ID-999", IdentityStatus.SUSPENDED);
+        });
+        assertEquals("ID not found", exception.getMessage());
     }
 
     @Test
     void testUpdateAddress() {
         service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
 
-        boolean result = service.updateAddress("ID-100", "25 Garden Lodge");
-        assertTrue(result);
+        service.updateAddress("ID-100", "25 Garden Lodge");
         assertEquals("25 Garden Lodge", service.getDigitalId("ID-100").getAddress());
     }
 
@@ -97,15 +100,19 @@ public class DigitalIdServiceTest {
         service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
         service.changeStatus("ID-100", IdentityStatus.REVOKED);
 
-        boolean result = service.updateAddress("ID-100", "25 Garden Lodge");
-        assertFalse(result);
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            service.updateAddress("ID-100", "25 Garden Lodge");
+        });
+        assertEquals("Cannot update a revoked ID", exception.getMessage());
     }
 
     @Test
     void testCannotUpdateAddressWithEmptyValue() {
         service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
 
-        boolean result = service.updateAddress("ID-100", "");
-        assertFalse(result);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.updateAddress("ID-100", "");
+        });
+        assertEquals("New address must not be empty", exception.getMessage());
     }
 }

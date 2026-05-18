@@ -7,11 +7,11 @@ public class DigitalIdService {
 
     public DigitalId createDigitalId(String id, String firstName, String lastName, String dateOfBirth, String address) {
         if (!validator.validate(id, firstName, lastName, dateOfBirth, address)) {
-            return null;
+            throw new IllegalArgumentException("All fields must be provided");
         }
 
         if (storage.findById(id) != null) {
-            return null;
+            throw new IllegalArgumentException("ID already exists");
         }
 
         DigitalId digitalId = new DigitalId(id, firstName, lastName, dateOfBirth, address);
@@ -23,41 +23,39 @@ public class DigitalIdService {
         return storage.findById(id);
     }
 
-    public boolean updateAddress(String id, String newAddress) {
+    public void updateAddress(String id, String newAddress) {
         DigitalId digitalId = storage.findById(id);
         if (digitalId == null) {
-            return false;
+            throw new IllegalArgumentException("ID not found");
         }
 
         if (digitalId.getStatus() == IdentityStatus.REVOKED) {
-            return false;
+            throw new IllegalStateException("Cannot update a revoked ID");
         }
 
         if (newAddress == null || newAddress.isEmpty()) {
-            return false;
+            throw new IllegalArgumentException("New address must not be empty");
         }
 
         digitalId.setAddress(newAddress);
-        return true;
     }
 
-    public boolean changeStatus(String id, IdentityStatus newStatus) {
+    public void changeStatus(String id, IdentityStatus newStatus) {
         DigitalId digitalId = storage.findById(id);
         if (digitalId == null) {
-            return false;
+            throw new IllegalArgumentException("ID not found");
         }
 
         IdentityStatus currentStatus = digitalId.getStatus();
 
         if (currentStatus == IdentityStatus.REVOKED) {
-            return false;
+            throw new IllegalStateException("Cannot change status of a revoked ID");
         }
 
         if (currentStatus == newStatus) {
-            return false;
+            throw new IllegalStateException("ID already has that status");
         }
 
         digitalId.setStatus(newStatus);
-        return true;
     }
 }
