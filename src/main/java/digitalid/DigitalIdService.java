@@ -22,4 +22,24 @@ public class DigitalIdService {
     public DigitalId getDigitalId(String id) {
         return storage.findById(id);
     }
+
+    public boolean changeStatus(String id, IdentityStatus newStatus) {
+        DigitalId digitalId = storage.findById(id);
+        if (digitalId == null) {
+            return false;
+        }
+
+        IdentityStatus currentStatus = digitalId.getStatus();
+
+        if (currentStatus == IdentityStatus.REVOKED) {
+            return false;
+        }
+
+        if (currentStatus == newStatus) {
+            return false;
+        }
+
+        digitalId.setStatus(newStatus);
+        return true;
+    }
 }
