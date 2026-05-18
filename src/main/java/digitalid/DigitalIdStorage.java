@@ -23,6 +23,4 @@ public class DigitalIdStorage {
     public List<DigitalId> findAll() {
         return digitalIds;
     }
-
-    // TODO: Add a way to check if an id already exists
 }
