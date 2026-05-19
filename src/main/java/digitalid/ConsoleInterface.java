@@ -7,6 +7,7 @@ import digitalid.service.DigitalIdService;
 import digitalid.service.VerificationService;
 import digitalid.storage.DigitalIdStorage;
 import digitalid.logging.EventLog;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleInterface {
@@ -46,6 +47,9 @@ public class ConsoleInterface {
                     lookupId();
                     break;
                 case "7":
+                    listAllIds();
+                    break;
+                case "8":
                     running = false;
                     System.out.println("Exiting system.");
                     break;
@@ -64,7 +68,8 @@ public class ConsoleInterface {
         System.out.println("4. Verify ID");
         System.out.println("5. View Event Log");
         System.out.println("6. Lookup ID");
-        System.out.println("7. Exit");
+        System.out.println("7. List All IDs");
+        System.out.println("8. Exit");
         System.out.print("Choose an option: ");
     }
 
@@ -191,6 +196,18 @@ public class ConsoleInterface {
         System.out.println("Event Log");
         for (String entry : eventLog.getLogs()) {
             System.out.println(entry);
+        }
+    }
+
+    private static void listAllIds() {
+        List<DigitalId> allIds = storage.findAll();
+        if (allIds.isEmpty()) {
+            System.out.println("No Digital IDs in the system.");
+            return;
+        }
+        System.out.println("All Digital IDs:");
+        for (DigitalId digitalId : allIds) {
+            System.out.println(digitalId.getId() + " - " + digitalId.getFirstName() + " " + digitalId.getLastName() + " [" + digitalId.getStatus() + "]");
         }
     }
 

@@ -37,7 +37,7 @@ public class DigitalIdValidator {
             int month = Integer.parseInt(date.substring(5, 7));
             int day = Integer.parseInt(date.substring(8, 10));
 
-            if (year < 1800 || year > 2026) {
+            if (year < 1800 || year > java.time.LocalDate.now().getYear()) {
                 return false;
             }
             if (month < 1 || month > 12) {
