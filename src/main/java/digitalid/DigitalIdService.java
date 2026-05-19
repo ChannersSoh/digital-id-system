@@ -3,7 +3,13 @@ package digitalid;
 public class DigitalIdService {
 
     private final DigitalIdValidator validator = new DigitalIdValidator();
-    private final DigitalIdStorage storage = new DigitalIdStorage();
+    private final DigitalIdStorage storage;
+    private final EventLog eventLog;
+
+    public DigitalIdService(DigitalIdStorage storage, EventLog eventLog) {
+        this.storage = storage;
+        this.eventLog = eventLog;
+    }
 
     public DigitalId createDigitalId(String id, String firstName, String lastName, String dateOfBirth, String address) {
         if (!validator.validate(id, firstName, lastName, dateOfBirth, address)) {
@@ -16,6 +22,7 @@ public class DigitalIdService {
 
         DigitalId digitalId = new DigitalId(id, firstName, lastName, dateOfBirth, address);
         storage.save(digitalId);
+        eventLog.log("CREATED", id);
         return digitalId;
     }
 
@@ -38,6 +45,7 @@ public class DigitalIdService {
         }
 
         digitalId.setAddress(newAddress);
+        eventLog.log("ADDRESS_UPDATED", id);
     }
 
     public void changeStatus(String id, IdentityStatus newStatus) {
@@ -57,5 +65,6 @@ public class DigitalIdService {
         }
 
         digitalId.setStatus(newStatus);
+        eventLog.log("STATUS_CHANGED_TO_" + newStatus, id);
     }
 }

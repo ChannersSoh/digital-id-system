@@ -3,9 +3,11 @@ package digitalid;
 public class VerificationService {
 
     private final DigitalIdStorage storage;
+    private final EventLog eventLog;
 
-    public VerificationService(DigitalIdStorage storage) {
+    public VerificationService(DigitalIdStorage storage, EventLog eventLog) {
         this.storage = storage;
+        this.eventLog = eventLog;
     }
 
     public boolean isActive(String id) {
@@ -13,6 +15,7 @@ public class VerificationService {
         if (digitalId == null) {
             throw new IllegalArgumentException("ID not found");
         }
+        eventLog.log("VERIFICATION_CHECK", id);
         return digitalId.getStatus() == IdentityStatus.ACTIVE;
     }
 
@@ -25,6 +28,8 @@ public class VerificationService {
         if (digitalId == null) {
             throw new IllegalArgumentException("ID not found");
         }
+
+        eventLog.log("TAX_VERIFICATION", id);
 
         if (digitalId.getStatus() == IdentityStatus.REVOKED) {
             return "ID is revoked";
@@ -45,6 +50,8 @@ public class VerificationService {
             throw new IllegalArgumentException("ID not found");
         }
 
+        eventLog.log("EMPLOYER_VERIFICATION", id);
+
         if (digitalId.getStatus() == IdentityStatus.ACTIVE) {
             return "VALID";
         }
@@ -60,6 +67,8 @@ public class VerificationService {
         if (digitalId == null) {
             throw new IllegalArgumentException("ID not found");
         }
+
+        eventLog.log("DRIVING_LICENCE_VERIFICATION", id);
 
         if (digitalId.getStatus() != IdentityStatus.ACTIVE) {
             return "ID is not active";

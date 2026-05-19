@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class VerificationServiceTest {
 
     private final DigitalIdStorage storage = new DigitalIdStorage();
-    private final VerificationService verificationService = new VerificationService(storage);
+    private final EventLog eventLog = new EventLog();
+    private final VerificationService verificationService = new VerificationService(storage, eventLog);
 
     @Test
     void testIsActiveReturnsTrue() {
@@ -130,5 +131,15 @@ public class VerificationServiceTest {
             verificationService.verifyForDrivingLicence("ID-200", OrganisationType.TAX);
         });
         assertEquals("Only driving licence organisations can use this verification", exception.getMessage());
+    }
+
+    @Test
+    void testEventLogRecordsVerification() {
+        DigitalId ozzy = new DigitalId("ID-200", "Ozzy", "Osbourne", "1948-12-03", "15 Beechwood Road");
+        storage.save(ozzy);
+
+        verificationService.isActive("ID-200");
+        assertEquals(1, eventLog.getLogs().size());
+        assertTrue(eventLog.getLogs().get(0).contains("VERIFICATION_CHECK"));
     }
 }

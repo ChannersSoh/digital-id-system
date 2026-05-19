@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DigitalIdServiceTest {
 
-    private final DigitalIdService service = new DigitalIdService();
+    private final DigitalIdStorage storage = new DigitalIdStorage();
+    private final EventLog eventLog = new EventLog();
+    private final DigitalIdService service = new DigitalIdService(storage, eventLog);
 
     @Test
     void testCreateValidDigitalId() {
@@ -114,5 +116,31 @@ public class DigitalIdServiceTest {
             service.updateAddress("ID-100", "");
         });
         assertEquals("New address must not be empty", exception.getMessage());
+    }
+
+    @Test
+    void testEventLogRecordsCreation() {
+        service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+
+        assertEquals(1, eventLog.getLogs().size());
+        assertTrue(eventLog.getLogs().get(0).contains("CREATED"));
+    }
+
+    @Test
+    void testEventLogRecordsStatusChange() {
+        service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+        service.changeStatus("ID-100", IdentityStatus.SUSPENDED);
+
+        assertEquals(2, eventLog.getLogs().size());
+        assertTrue(eventLog.getLogs().get(1).contains("STATUS_CHANGED_TO_SUSPENDED"));
+    }
+
+    @Test
+    void testEventLogRecordsAddressUpdate() {
+        service.createDigitalId("ID-100", "Freddie", "Mercury", "1946-09-05", "1 Logan Place");
+        service.updateAddress("ID-100", "25 Garden Lodge");
+
+        assertEquals(2, eventLog.getLogs().size());
+        assertTrue(eventLog.getLogs().get(1).contains("ADDRESS_UPDATED"));
     }
 }
