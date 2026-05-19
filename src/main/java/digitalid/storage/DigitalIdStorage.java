@@ -1,5 +1,6 @@
-package digitalid;
+package digitalid.storage;
 
+import digitalid.model.DigitalId;
 import java.util.ArrayList;
 import java.util.List;
 

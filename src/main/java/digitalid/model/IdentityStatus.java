@@ -1,4 +1,5 @@
-package digitalid;
+package digitalid.model;
+
 public enum IdentityStatus {
     ACTIVE,
     SUSPENDED,

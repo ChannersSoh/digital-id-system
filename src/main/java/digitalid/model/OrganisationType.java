@@ -1,6 +1,5 @@
-package digitalid;
+package digitalid.model;
 
-// Are anymore types required?
 public enum OrganisationType {
     HOME_MINISTRY,
     TAX,

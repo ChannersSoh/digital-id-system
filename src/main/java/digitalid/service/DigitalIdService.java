@@ -1,4 +1,10 @@
-package digitalid;
+package digitalid.service;
+
+import digitalid.model.DigitalId;
+import digitalid.model.IdentityStatus;
+import digitalid.storage.DigitalIdStorage;
+import digitalid.validation.DigitalIdValidator;
+import digitalid.logging.EventLog;
 
 public class DigitalIdService {
 

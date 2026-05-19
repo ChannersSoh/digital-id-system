@@ -1,5 +1,6 @@
-package digitalid;
+package digitalid.storage;
 
+import digitalid.model.DigitalId;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

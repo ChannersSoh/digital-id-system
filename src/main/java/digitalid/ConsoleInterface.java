@@ -1,5 +1,12 @@
 package digitalid;
 
+import digitalid.model.DigitalId;
+import digitalid.model.IdentityStatus;
+import digitalid.model.OrganisationType;
+import digitalid.service.DigitalIdService;
+import digitalid.service.VerificationService;
+import digitalid.storage.DigitalIdStorage;
+import digitalid.logging.EventLog;
 import java.util.Scanner;
 
 public class ConsoleInterface {

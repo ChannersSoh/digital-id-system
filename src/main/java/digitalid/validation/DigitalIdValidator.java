@@ -1,4 +1,4 @@
-package digitalid;
+package digitalid.validation;
 
 public class DigitalIdValidator {
 

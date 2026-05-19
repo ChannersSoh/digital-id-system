@@ -1,4 +1,4 @@
-package digitalid;
+package digitalid.model;
 
 public class DigitalId {
 

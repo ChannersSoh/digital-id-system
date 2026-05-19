@@ -1,5 +1,9 @@
-package digitalid;
+package digitalid.service;
 
+import digitalid.model.DigitalId;
+import digitalid.model.IdentityStatus;
+import digitalid.storage.DigitalIdStorage;
+import digitalid.logging.EventLog;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
