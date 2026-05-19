@@ -13,6 +13,9 @@ public class DigitalIdService {
 
     public DigitalId createDigitalId(String id, String firstName, String lastName, String dateOfBirth, String address) {
         if (!validator.validate(id, firstName, lastName, dateOfBirth, address)) {
+            if (dateOfBirth != null && !dateOfBirth.isEmpty() && !validator.isValidDate(dateOfBirth)) {
+                throw new IllegalArgumentException("Invalid date of birth format. Please use YYYY-MM-DD");
+            }
             throw new IllegalArgumentException("All fields must be provided");
         }
 

@@ -134,6 +134,25 @@ public class VerificationServiceTest {
     }
 
     @Test
+    void testLocalAuthorityVerificationOnActiveId() {
+        DigitalId ozzy = new DigitalId("ID-200", "Ozzy", "Osbourne", "1948-12-03", "15 Beechwood Road");
+        storage.save(ozzy);
+
+        String result = verificationService.verifyForLocalAuthority("ID-200", OrganisationType.LOCAL_AUTHORITY);
+        assertEquals("ID is active. Address: 15 Beechwood Road", result);
+    }
+
+    @Test
+    void testLocalAuthorityVerificationOnSuspendedId() {
+        DigitalId ozzy = new DigitalId("ID-200", "Ozzy", "Osbourne", "1948-12-03", "15 Beechwood Road");
+        ozzy.setStatus(IdentityStatus.SUSPENDED);
+        storage.save(ozzy);
+
+        String result = verificationService.verifyForLocalAuthority("ID-200", OrganisationType.LOCAL_AUTHORITY);
+        assertEquals("ID is currently suspended", result);
+    }
+
+    @Test
     void testEventLogRecordsVerification() {
         DigitalId ozzy = new DigitalId("ID-200", "Ozzy", "Osbourne", "1948-12-03", "15 Beechwood Road");
         storage.save(ozzy);

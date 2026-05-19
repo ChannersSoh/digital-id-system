@@ -84,4 +84,25 @@ public class VerificationService {
 
         return "Eligible for driving licence";
     }
+
+    public String verifyForLocalAuthority(String id, OrganisationType orgType) {
+        if (orgType != OrganisationType.LOCAL_AUTHORITY) {
+            throw new IllegalArgumentException("Only local authority organisations can use this verification");
+        }
+
+        DigitalId digitalId = storage.findById(id);
+        if (digitalId == null) {
+            throw new IllegalArgumentException("ID not found");
+        }
+
+        eventLog.log("LOCAL_AUTHORITY_VERIFICATION", id);
+
+        if (digitalId.getStatus() == IdentityStatus.REVOKED) {
+            return "ID is revoked";
+        }
+        if (digitalId.getStatus() == IdentityStatus.SUSPENDED) {
+            return "ID is currently suspended";
+        }
+        return "ID is active. Address: " + digitalId.getAddress();
+    }
 }
